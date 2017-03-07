@@ -1,16 +1,17 @@
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame ||
-            window.oRequestAnimationFrame ||
-            window.msRequestAnimationFrame ||
-            function (/* function */ callback, /* DOMElement */ element) {
-                window.setTimeout(callback, 1000 / 60);
-            };
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function (/* function */ callback, /* DOMElement */ element) {
+            window.setTimeout(callback, 1000 / 60);
+        };
 })();
 
 function GameEngine() {
     this.entities = [];
+    this.preStateEntities = [];
     this.ctx = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
@@ -46,7 +47,7 @@ GameEngine.prototype.startInput = function () {
             y = Math.floor(y / 32);
         }
 
-        return { x: x, y: y };
+        return {x: x, y: y};
     }
 
     var that = this;
@@ -108,13 +109,13 @@ GameEngine.prototype.draw = function () {
     for (var i = 0; i < this.entities.length; i++) {
         this.entities[i].draw(this.ctx);
     }
-    for (var i = 20 ; i < 1360; i+= 20) {
+    for (var i = 20; i < 1360; i += 20) {
         this.ctx.beginPath();
         this.ctx.moveTo(i, 0);
         this.ctx.lineTo(i, 800);
         this.ctx.stroke();
     }
-    for (var j = 20; j < 800 ; j+=20) {
+    for (var j = 20; j < 800; j += 20) {
         this.ctx.beginPath();
         this.ctx.moveTo(0, j);
         this.ctx.lineTo(1360, j);
@@ -131,7 +132,7 @@ GameEngine.prototype.draw = function () {
     // this.ctx.lineTo(100, 75);
     // this.ctx.lineTo(100, 25);
     // this.ctx.fill();
-    this.ctx.stroke();
+    // this.ctx.stroke();
 
     this.ctx.restore();
 }
@@ -139,11 +140,21 @@ GameEngine.prototype.draw = function () {
 GameEngine.prototype.update = function () {
     var entitiesCount = this.entities.length;
 
-    for (var i = 0; i < entitiesCount; i++) {
-        var entity = this.entities[i];
-
-        entity.update();
+    // for (var i = 0; i < entitiesCount; i++) {
+    //     var entity = this.entities[i];
+    //     entity.update();
+    // }
+    for (var column = 1; column < (1360 / 20) - 1; column++) {
+        for (var row = 1; row < (800 / 20) - 1; row++) {
+             //
+             // for (var i = 0; i < entitiesCount; i++) {
+             //     var entity = this.entities[i];
+             //     entity.update();
+             // }
+        }
     }
+
+
 }
 
 GameEngine.prototype.loop = function () {

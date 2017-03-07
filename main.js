@@ -65,9 +65,10 @@ function Cell(game, x, y) {
     this.animation = new Animation(spritesheet, 189, 230, 5, 0.10, 14, true, 1);
     this.x = x;
     this.y = y;
-    this.speed = 100;
     this.game = game;
     this.ctx = game.ctx;
+    this.removeFromWorld = false;
+    this.color = "Red";
     // Entity.call(this, game, 0, 250);
 }
 //
@@ -83,9 +84,7 @@ Cell.prototype.draw = function () {
 }
 
 Cell.prototype.update = function () {
-    if (this.animation.elapsedTime < this.animation.totalTime * 8 / 14)
-        this.x += this.game.clockTick * this.speed;
-    if (this.x > 800) this.x = -230;
+
 }
 
 
