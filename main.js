@@ -89,7 +89,22 @@ Cell.prototype.draw = function () {
     // this.ctx.arc(this.x + RADIUS, this.y + RADIUS, RADIUS, 0, Math.PI * 2, false);
     // this.ctx.fill();
     // this.ctx.closePath();
-    if (this.preState === 0 && this.state === 1) {
+
+    // if (this.preState === 0 && this.state === 1) {
+    //     this.ctx.strokeStyle = 'blue';
+    // } else if (this.state === 1) {
+    //     this.ctx.strokeStyle = 'black';
+    // } else if (this.preState ===1 && this.state == 0) {
+    //     this.ctx.strokeStyle = 'red';
+    // } else {
+    //     this.ctx.strokeStyle = 'white';
+    // }
+    // this.ctx.strokeRect(this.x, this.y, 20, 20);
+    // if (this.ctx.fillStyle === 'white') {
+    //     this.ctx.strokeStyle = 'black';
+    //     this.ctx.strokeRect(this.x, this.y, 20, 20);
+    // }
+    /*if (this.preState === 0 && this.state === 1) {
         this.ctx.fillStyle = 'blue';
     } else if (this.state === 1) {
         this.ctx.fillStyle = 'black';
@@ -98,7 +113,23 @@ Cell.prototype.draw = function () {
     } else {
         this.ctx.fillStyle = 'white';
     }
-    this.ctx.fillRect(this.x, this.y, 20, 20);
+    this.ctx.fillRect(this.x, this.y, 20, 20);*/
+    if (this.preState === 0 && this.state === 1) {
+        this.ctx.fillStyle = 'blue';
+        this.ctx.fillRect(this.x, this.y, 20, 20);
+    } else if (this.state === 1) {
+        this.ctx.fillStyle = 'black';
+        this.ctx.fillRect(this.x, this.y, 20, 20);
+    } else if (this.preState ===1 && this.state == 0) {
+        this.ctx.fillStyle = 'red';
+        this.ctx.fillRect(this.x, this.y, 20, 20);
+    } else {
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillRect(this.x, this.y, 20, 20);
+        this.ctx.strokeStyle='black';
+        this.ctx.strokeRect(this.x, this.y, 20, 20);
+    }
+
 }
 
 
