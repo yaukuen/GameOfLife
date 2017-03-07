@@ -2,6 +2,8 @@ var AM = new AssetManager();
 var WIDTH = 20;
 var HEIGHT = 20;
 var RADIUS = 10;
+var COLUMN = 1360/20;
+var ROW = 800/20;
 
 function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
     this.spriteSheet = spriteSheet;
@@ -62,13 +64,15 @@ Animation.prototype.isDone = function () {
 
 
 function Cell(game, x, y) {
-    this.animation = new Animation(spritesheet, 189, 230, 5, 0.10, 14, true, 1);
+    // this.animation = new Animation(spritesheet, 189, 230, 5, 0.10, 14, true, 1);
     this.x = x;
     this.y = y;
     this.game = game;
     this.ctx = game.ctx;
-    this.removeFromWorld = false;
-    this.color = "Red";
+    this.state = Math.floor(Math.random() * 2);
+    // console.log(this.state);
+    // this.color = "Red";
+    this.preState = this.state;
     // Entity.call(this, game, 0, 250);
 }
 //
@@ -76,15 +80,60 @@ function Cell(game, x, y) {
 // Cell.prototype.constructor = Cell;
 
 Cell.prototype.draw = function () {
-    this.ctx.beginPath();
-    this.ctx.fillStyle = this.color;
-    this.ctx.arc(this.x + RADIUS, this.y + RADIUS, RADIUS, 0, Math.PI * 2, false);
-    this.ctx.fill();
-    this.ctx.closePath();
+    // dead -> alive = blue
+    // alive -> dead = red
+    // stay alive = black
+    // stay white = white
+    // this.ctx.beginPath();
+    // this.ctx.fillStyle = this.color;
+    // this.ctx.arc(this.x + RADIUS, this.y + RADIUS, RADIUS, 0, Math.PI * 2, false);
+    // this.ctx.fill();
+    // this.ctx.closePath();
+    if (this.preState === 0 && this.state === 1) {
+        this.ctx.fillStyle = 'blue';
+    } else if (this.state === 1) {
+        this.ctx.fillStyle = 'black';
+    } else if (this.preState ===1 && this.state == 0) {
+        this.ctx.fillStyle = 'red';
+    } else {
+        this.ctx.fillStyle = 'white';
+    }
+    this.ctx.fillRect(this.x, this.y, 20, 20);
 }
 
-Cell.prototype.update = function () {
 
+Cell.prototype.updatePre = function () {
+    // for (var i = 0; i<COLUMN; i++) {
+    //     for (var j = 0; j <rows; j++) {
+    //
+    //     }
+    // }
+    // for (var i = 0; i < this.game.entities.length; i++) {
+    //     var ent = this.game.entities[i];
+    //     ent.preState = ent.state
+    // }
+    this.preState = this.state;
+}
+
+Cell.prototype.updateState = function () {
+    var neighbors = 0;
+    for(var i = -1; i <= 1; i++) {
+        for (var j = -1; j <= 1; j++) {
+            if (this.game.board[(this.x/WIDTH)+i] === undefined
+            || this.game.board[(this.x/WIDTH)+i][(this.y/HEIGHT)+j] === undefined) {
+                continue;
+            }
+            neighbors += this.game.board[(this.x/WIDTH)+i][(this.y/HEIGHT)+j].preState;
+        }
+    }
+    neighbors -= this.preState;
+    if ((this.state ===1)&& (neighbors < 2) ) {
+        this.state = 0;
+    } else if ((this.state === 1) && (neighbors > 3)) {
+        this.state = 0;
+    } else if ((this.state === 0) && (neighbors === 3)) {
+        this.state = 1;
+    }
 }
 
 
@@ -106,6 +155,12 @@ AM.downloadAll(function () {
     // gameEngine.addEntity(new MushroomDude(gameEngine, AM.getAsset("./img/mushroomdude.png")));
     // gameEngine.addEntity(new Cheetah(gameEngine, AM.getAsset("./img/runningcat.png")));
     // gameEngine.addEntity(new Guy(gameEngine, AM.getAsset("./img/guy.jpg")));
+
+    for (var i = 0; i < COLUMN; i++) {
+        for (var j = 0; j<ROW; j++) {
+            gameEngine.addEntity(new Cell(gameEngine,i*WIDTH, j*HEIGHT));
+        }
+    }
 
     console.log("All Done!");
 });
