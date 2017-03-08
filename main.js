@@ -2,9 +2,13 @@ var AM = new AssetManager();
 var WIDTH = 20;
 var HEIGHT = 20;
 var RADIUS = 10;
-var COLUMN = 1360/20;
-var ROW = 800/20;
+var COLUMN = 1360 / 20;
+var ROW = 800 / 20;
 
+
+function mouseCLick(e) {
+
+}
 function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
     this.spriteSheet = spriteSheet;
     this.frameWidth = frameWidth;
@@ -63,13 +67,14 @@ Animation.prototype.isDone = function () {
 // };
 
 
-function Cell(game, x, y) {
+function Cell(game, x, y, s) {
     // this.animation = new Animation(spritesheet, 189, 230, 5, 0.10, 14, true, 1);
     this.x = x;
     this.y = y;
     this.game = game;
     this.ctx = game.ctx;
-    this.state = Math.floor(Math.random() * 2);
+    this.state = s;
+    // this.cooldown = 0;
     // console.log(this.state);
     // this.color = "Red";
     this.preState = this.state;
@@ -105,28 +110,28 @@ Cell.prototype.draw = function () {
     //     this.ctx.strokeRect(this.x, this.y, 20, 20);
     // }
     /*if (this.preState === 0 && this.state === 1) {
-        this.ctx.fillStyle = 'blue';
-    } else if (this.state === 1) {
-        this.ctx.fillStyle = 'black';
-    } else if (this.preState ===1 && this.state == 0) {
-        this.ctx.fillStyle = 'red';
-    } else {
-        this.ctx.fillStyle = 'white';
-    }
-    this.ctx.fillRect(this.x, this.y, 20, 20);*/
+     this.ctx.fillStyle = 'blue';
+     } else if (this.state === 1) {
+     this.ctx.fillStyle = 'black';
+     } else if (this.preState ===1 && this.state == 0) {
+     this.ctx.fillStyle = 'red';
+     } else {
+     this.ctx.fillStyle = 'white';
+     }
+     this.ctx.fillRect(this.x, this.y, 20, 20);*/
     if (this.preState === 0 && this.state === 1) {
         this.ctx.fillStyle = 'blue';
         this.ctx.fillRect(this.x, this.y, 20, 20);
     } else if (this.state === 1) {
         this.ctx.fillStyle = 'black';
         this.ctx.fillRect(this.x, this.y, 20, 20);
-    } else if (this.preState ===1 && this.state == 0) {
+    } else if (this.preState === 1 && this.state == 0) {
         this.ctx.fillStyle = 'red';
         this.ctx.fillRect(this.x, this.y, 20, 20);
     } else {
         this.ctx.fillStyle = 'white';
         this.ctx.fillRect(this.x, this.y, 20, 20);
-        this.ctx.strokeStyle='black';
+        this.ctx.strokeStyle = 'black';
         this.ctx.strokeRect(this.x, this.y, 20, 20);
     }
 
@@ -134,6 +139,7 @@ Cell.prototype.draw = function () {
 
 
 Cell.prototype.updatePre = function () {
+
     // for (var i = 0; i<COLUMN; i++) {
     //     for (var j = 0; j <rows; j++) {
     //
@@ -146,19 +152,49 @@ Cell.prototype.updatePre = function () {
     this.preState = this.state;
 }
 
+Cell.prototype.update = function () {
+    /*if (this.cooldown > 0) this.cooldown -= this.game.clockTick;
+    if (this.cooldown < 0) this.cooldown = 0;*/
+    if (/*this.cooldown ===0 &&*/ this.game.click) {
+        /*this.cooldown = 3;*/
+        // console.log("yes and {"+ this.game.click.x+", "+this.game.click.y+"}");
+        if (this.game.click.x * WIDTH === this.x && this.game.click.y * HEIGHT === this.y) {
+            console.log("my x, y = {"+this.x+", "+this.y+"}");
+            console.log("click xy= {"+this.game.click.x+", "+this.game.click.y+"}");
+            for (var i = 0; i < 3; i++) {
+                for (j = 0; j < 3; j++) {
+                    if ((i === 0 && j === 0) ||
+                        (i === 2 && j === 0) ||
+                        (i === 0 && j === 1) ||
+                        (i === 1 && j === 1)) {
+                        this.game.board[(this.x / WIDTH) + i][(this.y / HEIGHT) + j].state = 0;
+                        // this.game.board[(this.x / WIDTH) + i][(this.y / HEIGHT) + j].preState = 0;
+                    } else {
+                        this.game.board[(this.x / WIDTH) + i][(this.y / HEIGHT) + j].state = 1
+                        // this.game.board[(this.x / WIDTH) + i][(this.y / HEIGHT) + j].preState = 1;;
+                    }
+                }
+            }
+            // console.log("my x, y = {"+this.x+", "+this.y+"}");
+            // console.log("click xy= {"+this.game.click.x+", "+this.game.click.y+"}");
+            this.game.click = false;
+        }
+    }
+}
+
 Cell.prototype.updateState = function () {
     var neighbors = 0;
-    for(var i = -1; i <= 1; i++) {
+    for (var i = -1; i <= 1; i++) {
         for (var j = -1; j <= 1; j++) {
-            if (this.game.board[(this.x/WIDTH)+i] === undefined
-            || this.game.board[(this.x/WIDTH)+i][(this.y/HEIGHT)+j] === undefined) {
+            if (this.game.board[(this.x / WIDTH) + i] === undefined
+                || this.game.board[(this.x / WIDTH) + i][(this.y / HEIGHT) + j] === undefined) {
                 continue;
             }
-            neighbors += this.game.board[(this.x/WIDTH)+i][(this.y/HEIGHT)+j].preState;
+            neighbors += this.game.board[(this.x / WIDTH) + i][(this.y / HEIGHT) + j].preState;
         }
     }
     neighbors -= this.preState;
-    if ((this.state ===1)&& (neighbors < 2) ) {
+    if ((this.state === 1) && (neighbors < 2)) {
         this.state = 0;
     } else if ((this.state === 1) && (neighbors > 3)) {
         this.state = 0;
@@ -169,11 +205,42 @@ Cell.prototype.updateState = function () {
 
 function RandomStart(gameEngine) {
     for (var i = 0; i < COLUMN; i++) {
-        for (var j = 0; j<ROW; j++) {
-            gameEngine.addEntity(new Cell(gameEngine,i*WIDTH, j*HEIGHT));
+        for (var j = 0; j < ROW; j++) {
+            var s = Math.floor(Math.random() * 2);
+            gameEngine.addEntity(new Cell(gameEngine, i * WIDTH, j * HEIGHT, s));
         }
     }
 }
+var EACH_PATTERN = 17
+function Pulsar_Period_3(gameEngine) {
+    for (var i = 0; i < COLUMN; i++) {
+        for (var j = 0; j < ROW; j++) {
+            if (((i % EACH_PATTERN === 3 || i % EACH_PATTERN === 4 || i % EACH_PATTERN === 5 ||
+                i % EACH_PATTERN === 9 || i % EACH_PATTERN === 10 || i % EACH_PATTERN === 11) && i !== 0)
+                && (j % EACH_PATTERN === 1 || j % EACH_PATTERN === 6 ||
+                j % EACH_PATTERN === 8 || j % EACH_PATTERN === 13) && j !== 0) {
+                gameEngine.addEntity(new Cell(gameEngine, i * WIDTH, j * HEIGHT, 1));
+            } else if (((i % EACH_PATTERN === 1 || i % EACH_PATTERN === 6 ||
+                i % EACH_PATTERN === 8 || i % EACH_PATTERN === 13) && i !== 0)
+                && (j % EACH_PATTERN === 3 || j % EACH_PATTERN === 4 || j % EACH_PATTERN === 5 ||
+                j % EACH_PATTERN === 9 || j % EACH_PATTERN === 10 || j % EACH_PATTERN === 11) && j !== 0) {
+                gameEngine.addEntity(new Cell(gameEngine, i * WIDTH, j * HEIGHT, 1));
+            }
+            else {
+                gameEngine.addEntity(new Cell(gameEngine, i * WIDTH, j * HEIGHT, 0));
+            }
+        }
+    }
+}
+
+function Nothing(gameEngine) {
+    for (var i = 0; i < COLUMN; i++) {
+        for (var j = 0; j < ROW; j++) {
+            gameEngine.addEntity(new Cell(gameEngine, i * WIDTH, j * HEIGHT, 0));
+        }
+    }
+}
+
 
 AM.queueDownload("./img/RobotUnicorn.png");
 AM.queueDownload("./img/guy.jpg");
@@ -194,7 +261,9 @@ AM.downloadAll(function () {
     // gameEngine.addEntity(new Cheetah(gameEngine, AM.getAsset("./img/runningcat.png")));
     // gameEngine.addEntity(new Guy(gameEngine, AM.getAsset("./img/guy.jpg")));
 
-    RandomStart(gameEngine);
+    // RandomStart(gameEngine);
+    Pulsar_Period_3(gameEngine);
+    // Nothing(gameEngine);
 
     console.log("All Done!");
 });
