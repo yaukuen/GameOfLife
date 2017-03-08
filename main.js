@@ -167,6 +167,13 @@ Cell.prototype.updateState = function () {
     }
 }
 
+function RandomStart(gameEngine) {
+    for (var i = 0; i < COLUMN; i++) {
+        for (var j = 0; j<ROW; j++) {
+            gameEngine.addEntity(new Cell(gameEngine,i*WIDTH, j*HEIGHT));
+        }
+    }
+}
 
 AM.queueDownload("./img/RobotUnicorn.png");
 AM.queueDownload("./img/guy.jpg");
@@ -187,11 +194,7 @@ AM.downloadAll(function () {
     // gameEngine.addEntity(new Cheetah(gameEngine, AM.getAsset("./img/runningcat.png")));
     // gameEngine.addEntity(new Guy(gameEngine, AM.getAsset("./img/guy.jpg")));
 
-    for (var i = 0; i < COLUMN; i++) {
-        for (var j = 0; j<ROW; j++) {
-            gameEngine.addEntity(new Cell(gameEngine,i*WIDTH, j*HEIGHT));
-        }
-    }
+    RandomStart(gameEngine);
 
     console.log("All Done!");
 });
