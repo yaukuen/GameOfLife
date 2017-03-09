@@ -220,7 +220,9 @@ function RandomStart(gameEngine) {
         }
     }
 }
-var EACH_PATTERN = 17
+
+var EACH_PATTERN = 17;
+
 function Pulsar_Period_3(gameEngine) {
     for (var i = 0; i < COLUMN; i++) {
         for (var j = 0; j < ROW; j++) {
