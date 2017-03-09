@@ -74,7 +74,7 @@ function Cell(game, x, y, s) {
     this.game = game;
     this.ctx = game.ctx;
     this.state = s;
-    // this.cooldown = 0;
+    this.cooldown = 0;
     // console.log(this.state);
     // this.color = "Red";
     this.preState = this.state;
@@ -149,7 +149,12 @@ Cell.prototype.updatePre = function () {
     //     var ent = this.game.entities[i];
     //     ent.preState = ent.state
     // }
-    this.preState = this.state;
+    if (this.cooldown > 0) this.cooldown -= this.game.clockTick;
+    if (this.cooldown < 0) this.cooldown = 0;
+    if (this.cooldown === 0) {
+        // this.cooldown = 0.5;
+        this.preState = this.state;
+    }
 }
 
 Cell.prototype.update = function () {
@@ -163,9 +168,8 @@ Cell.prototype.update = function () {
             console.log("click xy= {"+this.game.click.x+", "+this.game.click.y+"}");
             for (var i = 0; i < 3; i++) {
                 for (j = 0; j < 3; j++) {
-                    if ((i === 0 && j === 0) ||
+                    if ((i === 0 && (j === 0 || j === 1)) ||
                         (i === 2 && j === 0) ||
-                        (i === 0 && j === 1) ||
                         (i === 1 && j === 1)) {
                         this.game.board[(this.x / WIDTH) + i][(this.y / HEIGHT) + j].state = 0;
                         // this.game.board[(this.x / WIDTH) + i][(this.y / HEIGHT) + j].preState = 0;
@@ -183,23 +187,28 @@ Cell.prototype.update = function () {
 }
 
 Cell.prototype.updateState = function () {
-    var neighbors = 0;
-    for (var i = -1; i <= 1; i++) {
-        for (var j = -1; j <= 1; j++) {
-            if (this.game.board[(this.x / WIDTH) + i] === undefined
-                || this.game.board[(this.x / WIDTH) + i][(this.y / HEIGHT) + j] === undefined) {
-                continue;
+    // if (this.cooldown > 0) this.cooldown -= this.game.clockTick;
+    // if (this.cooldown < 0) this.cooldown = 0;
+    if (this.cooldown ===0) {
+        this.cooldown = 0.2;
+        var neighbors = 0;
+        for (var i = -1; i <= 1; i++) {
+            for (var j = -1; j <= 1; j++) {
+                if (this.game.board[(this.x / WIDTH) + i] === undefined
+                    || this.game.board[(this.x / WIDTH) + i][(this.y / HEIGHT) + j] === undefined) {
+                    continue;
+                }
+                neighbors += this.game.board[(this.x / WIDTH) + i][(this.y / HEIGHT) + j].preState;
             }
-            neighbors += this.game.board[(this.x / WIDTH) + i][(this.y / HEIGHT) + j].preState;
         }
-    }
-    neighbors -= this.preState;
-    if ((this.state === 1) && (neighbors < 2)) {
-        this.state = 0;
-    } else if ((this.state === 1) && (neighbors > 3)) {
-        this.state = 0;
-    } else if ((this.state === 0) && (neighbors === 3)) {
-        this.state = 1;
+        neighbors -= this.preState;
+        if ((this.state === 1) && (neighbors < 2)) {
+            this.state = 0;
+        } else if ((this.state === 1) && (neighbors > 3)) {
+            this.state = 0;
+        } else if ((this.state === 0) && (neighbors === 3)) {
+            this.state = 1;
+        }
     }
 }
 
