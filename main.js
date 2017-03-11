@@ -1,4 +1,5 @@
 var AM = new AssetManager();
+var gameEngine;
 var WIDTH = 20;
 var HEIGHT = 20;
 var RADIUS = 10;
@@ -212,7 +213,8 @@ Cell.prototype.updateState = function () {
     }
 }
 
-function RandomStart(gameEngine) {
+function RandomStart() {
+    console.log("random mode");
     for (var i = 0; i < COLUMN; i++) {
         for (var j = 0; j < ROW; j++) {
             var s = Math.floor(Math.random() * 2);
@@ -223,7 +225,8 @@ function RandomStart(gameEngine) {
 
 var EACH_PATTERN = 17;
 
-function Pulsar_Period_3(gameEngine) {
+function Pulsar_Period_3() {
+    console.log("Pulsar mode");
     for (var i = 0; i < COLUMN; i++) {
         for (var j = 0; j < ROW; j++) {
             if (((i % EACH_PATTERN === 3 || i % EACH_PATTERN === 4 || i % EACH_PATTERN === 5 ||
@@ -244,7 +247,8 @@ function Pulsar_Period_3(gameEngine) {
     }
 }
 
-function Nothing(gameEngine) {
+function deadMode() {
+    console.log("dead mode");
     for (var i = 0; i < COLUMN; i++) {
         for (var j = 0; j < ROW; j++) {
             gameEngine.addEntity(new Cell(gameEngine, i * WIDTH, j * HEIGHT, 0));
@@ -252,6 +256,17 @@ function Nothing(gameEngine) {
     }
 }
 
+function randomMode() {
+    // for (var i = 0; gameEngine.entities.length; i++) {
+    //     gameEngine.entities
+    // }
+    console.log("random mode");
+    RandomStart();
+}
+
+function pulsarMode() {
+    Pulsar_Period_3();
+}
 
 AM.queueDownload("./img/RobotUnicorn.png");
 AM.queueDownload("./img/guy.jpg");
@@ -263,7 +278,7 @@ AM.downloadAll(function () {
     var canvas = document.getElementById("gameWorld");
     var ctx = canvas.getContext("2d");
 
-    var gameEngine = new GameEngine();
+    gameEngine = new GameEngine();
     gameEngine.init(ctx);
     gameEngine.start();
 
@@ -273,7 +288,7 @@ AM.downloadAll(function () {
     // gameEngine.addEntity(new Guy(gameEngine, AM.getAsset("./img/guy.jpg")));
 
     // RandomStart(gameEngine);
-    Pulsar_Period_3(gameEngine);
+    //Pulsar_Period_3();
     // Nothing(gameEngine);
 
     console.log("All Done!");
