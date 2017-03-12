@@ -11,10 +11,12 @@
 <body>
     <canvas id="gameWorld" tabindex="1" width="1360" height="800" style="border: 1px solid brown; background: lightblue"></canvas>
     <form>
-        <input type = "button" onclick="randomMode()">Random</input>
-        <input type ="button" onclick="pulsarMode()">Pulsar (period 3)</input>
-        <input type ="button" onclick="deadMode()">ALL DEAD for playing glider</input>
+        <!--<input type = "button" onclick="randomMode()">Random</input>-->
+        <button type = "reset" onclick="randomMode()">Random</button>
+        <button type ="reset" onclick="pulsarMode()">Pulsar (period 3)</button>
+        <button type ="reset" onclick="deadMode()">ALL DEAD for playing glider</button>
     </form>
     <p>RED: life to dead, BLUE: dead to life, BLACK: stay life, WHITE: stay dead.</p>
+    <p>Left click in the canvas will produce glider.</p>
 </body>
 </html>

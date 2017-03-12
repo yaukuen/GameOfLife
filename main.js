@@ -79,6 +79,7 @@ function Cell(game, x, y, s) {
     // console.log(this.state);
     // this.color = "Red";
     this.preState = this.state;
+    this.removeFromWorld = false;
     // Entity.call(this, game, 0, 250);
 }
 //
@@ -191,7 +192,7 @@ Cell.prototype.updateState = function () {
     // if (this.cooldown > 0) this.cooldown -= this.game.clockTick;
     // if (this.cooldown < 0) this.cooldown = 0;
     if (this.cooldown ===0) {
-        this.cooldown = 0.2;
+        this.cooldown = 0.1;
         var neighbors = 0;
         for (var i = -1; i <= 1; i++) {
             for (var j = -1; j <= 1; j++) {
@@ -249,11 +250,13 @@ function Pulsar_Period_3() {
 
 function deadMode() {
     console.log("dead mode");
+    gameEngine.entities = [];
     for (var i = 0; i < COLUMN; i++) {
         for (var j = 0; j < ROW; j++) {
             gameEngine.addEntity(new Cell(gameEngine, i * WIDTH, j * HEIGHT, 0));
         }
     }
+    console.log("Entities size: " + gameEngine.entities.length);
 }
 
 function randomMode() {
@@ -261,11 +264,15 @@ function randomMode() {
     //     gameEngine.entities
     // }
     console.log("random mode");
+    gameEngine.entities = [];
     RandomStart();
+    console.log("Entities size: " + gameEngine.entities.length);
 }
 
 function pulsarMode() {
+    gameEngine.entities = [];
     Pulsar_Period_3();
+    console.log("Entities size: " + gameEngine.entities.length);
 }
 
 AM.queueDownload("./img/RobotUnicorn.png");
@@ -287,7 +294,7 @@ AM.downloadAll(function () {
     // gameEngine.addEntity(new Cheetah(gameEngine, AM.getAsset("./img/runningcat.png")));
     // gameEngine.addEntity(new Guy(gameEngine, AM.getAsset("./img/guy.jpg")));
 
-    // RandomStart(gameEngine);
+    RandomStart(gameEngine);
     //Pulsar_Period_3();
     // Nothing(gameEngine);
 
