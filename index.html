@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Game Project Shell</title>
+    <script type="text/javascript" src="http://76.28.150.193:8888/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="./gameengine.js"></script>
     <script type="text/javascript" src="./assetmanager.js"></script>
     <script type="text/javascript" src="./main.js"></script>
@@ -15,6 +16,8 @@
         <button type = "reset" onclick="randomMode()">Random</button>
         <button type ="reset" onclick="pulsarMode()">Pulsar (period 3)</button>
         <button type ="reset" onclick="deadMode()">ALL DEAD for playing glider</button>
+        <button type = "reset" onclick="load()">Load</button>
+        <button type ="reset" onclick="save()">Save</button>
     </form>
     <p>RED: life to dead, BLUE: dead to life, BLACK: stay life, WHITE: stay dead.</p>
     <p>Left click in the canvas will produce glider.</p>

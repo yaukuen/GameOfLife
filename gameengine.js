@@ -68,14 +68,14 @@ GameEngine.prototype.startInput = function () {
 
     this.ctx.canvas.addEventListener("click", function (e) {
         that.click = getXandY(e);
-        console.log(e);
-        console.log("Left Click Event - X,Y " + e.clientX + ", " + e.clientY);
+        // console.log(e);
+        // console.log("Left Click Event - X,Y " + e.clientX + ", " + e.clientY);
     }, false);
 
     this.ctx.canvas.addEventListener("contextmenu", function (e) {
         that.click = getXandY(e);
-        console.log(e);
-        console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
+        // console.log(e);
+        // console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
         e.preventDefault();
     }, false);
 
@@ -85,33 +85,33 @@ GameEngine.prototype.startInput = function () {
     }, false);
 
     this.ctx.canvas.addEventListener("mousewheel", function (e) {
-        console.log(e);
+        //console.log(e);
         that.wheel = e;
-        console.log("Click Event - X,Y " + e.clientX + ", " + e.clientY + " Delta " + e.deltaY);
+        //console.log("Click Event - X,Y " + e.clientX + ", " + e.clientY + " Delta " + e.deltaY);
     }, false);
 
     this.ctx.canvas.addEventListener("keydown", function (e) {
-        console.log(e);
-        console.log("Key Down Event - Char " + e.code + " Code " + e.keyCode);
+        //console.log(e);
+        //console.log("Key Down Event - Char " + e.code + " Code " + e.keyCode);
     }, false);
 
     this.ctx.canvas.addEventListener("keypress", function (e) {
         if (e.code === "KeyD") that.d = true;
         that.chars[e.code] = true;
-        console.log(e);
-        console.log("Key Pressed Event - Char " + e.charCode + " Code " + e.keyCode);
+        //console.log(e);
+        //console.log("Key Pressed Event - Char " + e.charCode + " Code " + e.keyCode);
     }, false);
 
     this.ctx.canvas.addEventListener("keyup", function (e) {
-        console.log(e);
-        console.log("Key Up Event - Char " + e.code + " Code " + e.keyCode);
+        //console.log(e);
+        //console.log("Key Up Event - Char " + e.code + " Code " + e.keyCode);
     }, false);
 
-    console.log('Input started');
+    //console.log('Input started');
 }
 
 GameEngine.prototype.addEntity = function (entity) {
-    console.log('added entity');
+    //console.log('added entity');
     this.entities.push(entity);
     // console.log("ent {"+entity.x+","+entity.y+"}");
     this.board[entity.x / WIDTH][entity.y / HEIGHT] = entity;

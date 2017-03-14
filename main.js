@@ -6,6 +6,125 @@ var RADIUS = 10;
 var COLUMN = 1360 / 20;
 var ROW = 800 / 20;
 
+var socket = io.connect("http://76.28.150.193:8888");
+
+socket.on("load", function (data) {
+    gameEngine.entities = [];
+    var savedEntities = data.x;
+    for (var i = 0; i < savedEntities.length; i++) {
+        var x = savedEntities[i].x;
+        var y = savedEntities[i].y;
+        var s = savedEntities[i].s;
+        var state = savedEntities[i].state;
+        var cooldown = savedEntities[i].cooldown;
+        var preState = savedEntities[i].preState;
+        var cell = new Cell(gameEngine, x, y, s);
+        cell.state = state;
+        cell.cooldown = cooldown;
+        cell.preState = preState;
+        //gameEngine.entities.push(cell);
+        gameEngine.addEntity(cell);
+    }
+    console.log(data.x);
+});
+
+// socket.emit("save", { studentname: "Yau Kuen Tsang", statename: "aState", x:5 });
+// socket.emit("load", { studentname: "Yau Kuen Tsang", statename: "aState" });
+//socket.emit("load", { studentname: "Yau Kuen Tsang", statename: "theState" });
+
+function SaveCell(x, y, s) {
+    this.x = x;
+    this.y = y;
+    this.state = s;
+    this.cooldown = 0;
+    this.preState = this.state;
+}
+
+function save() {
+    var saveEntities = [];
+    for (var i = 0; i < gameEngine.entities.length; i++) {
+        var x = gameEngine.entities[i].x;
+        var y = gameEngine.entities[i].y;
+        var s = gameEngine.entities[i].s;
+        var state = gameEngine.entities[i].state;
+        var cooldown = gameEngine.entities[i].cooldown;
+        var preState = gameEngine.entities[i].preState;
+        var cell = new SaveCell(x, y, s);
+        cell.state = state;
+        cell.cooldown = cooldown;
+        cell.preState = preState;
+        saveEntities.push(cell);
+    }
+
+    socket.emit("save", { studentname: "Yau Kuen Tsang", statename: "aState", x:saveEntities});
+}
+function load() {
+    socket.emit("load", { studentname: "Yau Kuen Tsang", statename: "aState" });
+}
+
+window.onload = function () {
+//     console.log("starting up da sheild");
+//     var messages = [];
+//     var field = document.getElementById("field");
+//     var username = document.getElementById("username");
+//     var content = document.getElementById("content");
+//
+//     socket.on("ping", function (ping) {
+//         console.log(ping);
+//         socket.emit("pong");
+//     });
+//
+//     socket.on("sync", function (data) {
+//         messages = data;
+//         var html = '';
+//         for (var i = 0; i < messages.length; i++) {
+//             html += '<b>' + (messages[i].username ? messages[i].username : "Server") + ": </b>";
+//             html += messages[i].message + "<br />";
+//         }
+//         content.innerHTML = html;
+//         content.scrollTop = content.scrollHeight;
+//         console.log("sync " + html);
+//     });
+//
+//     socket.on("message", function (data) {
+//         if (data.message) {
+//             messages.push(data);
+//             var html = '';
+//             for (var i = 0; i < messages.length; i++) {
+//                 html += '<b>' + (messages[i].username ? messages[i].username : "Server") + ": </b>";
+//                 html += messages[i].message + "<br />";
+//             }
+//             content.innerHTML = html;
+//             content.scrollTop = content.scrollHeight;
+//         } else {
+//             console.log("No message.");
+//         }
+//
+//     });
+//
+//     field.onkeydown = function (e) {
+//         if (e.keyCode === 13) {
+//             var text = field.value;
+//             var name = username.value;
+//             console.log("message sent " + text);
+//             socket.emit("send", { message: text, username: name });
+//             field.value = "";
+//         }
+//     };
+
+    socket.on("connect", function () {
+        console.log("Socket connected.")
+    });
+    socket.on("disconnect", function () {
+        console.log("Socket disconnected.")
+    });
+    socket.on("reconnect", function () {
+        console.log("Socket reconnected.")
+    });
+
+};
+
+
 
 function mouseCLick(e) {
 
