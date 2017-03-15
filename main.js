@@ -6,7 +6,7 @@ var RADIUS = 10;
 var COLUMN = 1360 / 20;
 var ROW = 800 / 20;
 
-var socket = io.connect("https://76.28.150.193:8888");
+var socket = io.connect("http://76.28.150.193:8888");
 
 socket.on("load", function (data) {
     gameEngine.entities = [];
